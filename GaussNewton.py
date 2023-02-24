@@ -28,24 +28,27 @@ def eval(args):
 
     y = np.array([VectorField.measurement(x, vf) for x in X])
     # add noise
-    y = y + np.random.normal(0, 0.01, size=len(X))
+    y = y + np.random.normal(0, args.noise, size=len(X))
 
     gt = np.array(data)
     predict = least_squares(func, gt.flatten(), args=(X, y))
     predict = np.reshape(predict.x, gt.shape)
     return avg_mse(gt, predict)
 
+
+
 if __name__ == '__main__':
     filename = sys.argv[1]
     parser = ArgumentParser()
     parser.add_argument('--file', type=str, required=True, help='parameter files')
-    parser.add_argument('--num-samples', type=int, default=100, help='number of training data')
+    parser.add_argument('--num-samples', type=int, default=15, help='number of training data')
     parser.add_argument('--noise', type=float, default=0.01, help='observation noise')
-
     args = parser.parse_args()
+
 
     mse = eval(args)
     print(f"[MSE] = {mse}")
+
 
 
 

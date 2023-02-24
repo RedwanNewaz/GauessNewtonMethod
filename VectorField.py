@@ -10,13 +10,17 @@ class VectorField:
         A[0, 1] = self.l * x * y
         A[1, 0] = self.l * x * y
         A[1, 1] = (self.l - 1) * y ** 2 - x ** 2
-        return np.sum(A @ self.source)
+        F = A @ self.source
+
+        return F
 
     def __repr__(self):
         return f"type = {self.l} source = {self.source}"
 
     @staticmethod
-    def measurement(p: np.ndarray, vfList:list):
-        return sum(v(p[0], p[1]) for v in vfList)
+    def measurement(p: np.ndarray, vfList:list, isEstimation=True):
+        y = np.array([v(p[0], p[1]) for v in vfList])
+        # print(y.shape)
+        return y.sum(axis=0) if not isEstimation else y.sum()
 
 
